@@ -15,10 +15,10 @@ export class Staff {
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
-  @Column({ type: 'enum', enum: ['FULLTIME', 'SESSIONAL', 'HOURLY'] })
+  @Column({ type: 'varchar' })
   staff_type: StaffType;
 
-  @Column({ type: 'enum', enum: ['YOUTH_WORKER', 'SESSION_SUPPORT', 'MANAGEMENT', 'VOLUNTEER'] })
+  @Column({ type: 'varchar' })
   designation: StaffDesignation;
 
   @Column({ type: 'numeric', precision: 5, scale: 2, default: 0 })

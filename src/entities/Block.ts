@@ -15,7 +15,7 @@ export class Block {
   @Column({ type: 'date' })
   end_date: string;
 
-  @Column({ type: 'enum', enum: ['DRAFT', 'PUBLISHED'], default: 'DRAFT' })
+  @Column({ type: 'varchar', default: 'DRAFT' })
   status: 'DRAFT' | 'PUBLISHED';
 
   @Column({ type: 'time', default: '14:00:00' })

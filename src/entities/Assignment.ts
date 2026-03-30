@@ -18,7 +18,7 @@ export class Assignment {
   @Column({ type: 'uuid' })
   staffId: string; // Foreign key to Staff table
 
-  @Column({ type: 'enum', enum: ['DRAFT', 'INVITED', 'ACCEPTED', 'CONFIRMED', 'REJECTED'] })
+  @Column({ type: 'varchar' })
   status: AssignmentStatus;
 
   @Column({ type: 'timestamp' })

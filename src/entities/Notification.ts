@@ -16,7 +16,7 @@ export class Notification {
   @Column({ type: 'text' })
   message: string;
 
-  @Column({ type: 'enum', enum: ['INVITE', 'ASSIGNMENT_UPDATE', 'ROLE_CHANGE', 'SYSTEM', 'ERROR'] })
+  @Column({ type: 'varchar' })
   type: NotificationType;
 
   @Column({ type: 'boolean', default: false })

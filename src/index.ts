@@ -27,16 +27,11 @@ app.use('/api/assignments', assignmentRoutes);
 
 app.use('/api', miscRoutes); // Automatically makes /api/locations, /api/staff, etc
 
-// AppDataSource.initialize()
-//   .then(() => {
-//     console.log('Database connected successfully');
-//     app.listen(PORT, () => {
-//       console.log(`Server running on http://localhost:${PORT}`);
-//     });
-//   })
-//   .catch((error) => console.log('Database connection failed', error));
-
-// Mock start for now (until DB is setup by the user)
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Database connected successfully');
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => console.log('Database connection failed', error));
