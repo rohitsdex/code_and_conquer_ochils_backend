@@ -1,46 +1,51 @@
-# Code & Conquer Ochils Backend
+# Sahayak Staff Flow - Backend API
 
-This is the professional Node.js (Express + TypeScript + TypeORM) backend architecture for the **Constraint-Driven Scheduling System**.
+Professional Node.js (Express + TypeScript + TypeORM) backend for the **Sahayak Constraint-Driven Scheduling System**.
 
 ## 🏗️ Architecture Stack
 - **Framework:** Express.js + Node.js
 - **Language:** TypeScript
 - **Database ORM:** TypeORM
-- **Database:** PostgreSQL (Preferred)
-- **Validation:** Zod / Class-Validator (Incoming)
+- **Database:** SQLite (Default for local development)
+- **API Documentation:** Swagger UI (OpenAPI 3.0)
 
 ## 🧊 Domain Model (TypeORM Entities)
-The backend exactly maps to the frontend constraint engine architecture:
-1. `Block`: The top-level isolation period mapping Date Ranges.
-2. `EventInstance`: The Session logic rigidly constrained within its parent Block ID.
-3. `Assignment`: Staff members attached to Event Instances tracking their scheduling state (`DRAFT`, `INVITED`, `ACCEPTED`, `CONFIRMED`).
-
-## 🔄 Availability Aggregator & Constraint Checks
-In subsequent sprints, you will port the Frontend `AvailabilityAggregator` (Bookio / Zoho mock adapters) into this backend.
-When an Assignment is triggered on `/api/assignments`, the Backend must physically execute the:
-1. Shift Overlaps Check (±30m)
-2. Weekly Hours Cap Constraint
-3. Leave/Booking External Validation (Zoho/Bookio HR Systems integration)
+1. `Block`: Container for scheduling periods (e.g., "Easter 2026").
+2. `EventInstance`: Individual sessions (ASC, DRAMA, etc.) within a Block.
+3. `Assignment`: Staff assigned to sessions with statuses (`INVITED`, `ACCEPTED`, `CONFIRMED`).
+4. `Staff`: Staff members with qualifications, availability, and weekly hour caps.
+5. `Location`: Venue details for sessions.
+6. `Notification`: System-wide logs and alerts.
 
 ## 🛠️ Getting Started
 
-### 1. Database Setup
-Ensure you have a PostgreSQL or SQLite instance running. Update your `.env` file (or hardcode standard values during dev in `src/config/database.ts`).
-
-### 2. Installation
+### 1. Installation
 ```bash
 npm install
 ```
+
+### 2. Database Initialization & Seeding
+This project uses SQLite. Before running the server, you **must** seed the database with mock data to match the frontend expectations.
+```bash
+npm run seed
+```
+*Note: This will delete the existing `staffflow.sqlite` (if any) and recreate it with fresh mock data.*
 
 ### 3. Run Development Server
 ```bash
 npm run dev
 ```
+The server will start on `http://localhost:4000`.
 
-This will run `nodemon` connecting to `src/index.ts`. TypeORM will automatically synchronize your entity models directly into rigid SQL Data Tables.
+### 4. API Documentation
+Once the server is running, you can access the interactive Swagger UI at:
+👉 **[http://localhost:4000/api-docs](http://localhost:4000/api-docs)**
 
-### 4. Build for Production
-```bash
-npm run build
-npm start
-``` 
+---
+
+## 🔄 Business Logic & Constraints
+The backend handles the core "Eligibility Engine":
+- **Quals Check**: Verifies if staff has required tags.
+- **Availability Check**: Matches event day-of-week against staff availability.
+- **Leave Check**: Prevents assignment during staff leave periods.
+- **Hours Cap**: Prevents assigning shifts that exceed weekly contracted hours.

@@ -8,8 +8,11 @@ export class Location {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  address: string;
+
   @Column({ type: 'int', default: 50 })
-  capacity: string;
+  capacity: number;
 
   @CreateDateColumn()
   created_at: Date;

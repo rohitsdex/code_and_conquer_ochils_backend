@@ -8,6 +8,9 @@ export class EventType {
   @Column({ type: 'varchar' })
   name: string;
 
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
   @Column({ type: 'int', default: 120 })
   durationMinutes: number;
 
@@ -15,7 +18,10 @@ export class EventType {
   defaultStaffCount: number;
 
   @Column({ type: 'simple-array', default: '' })
-  requiredQualifications: string[];
+  qualifications: string[];
+
+  @Column({ type: 'varchar', nullable: true })
+  color: string;
 
   @Column({ type: 'varchar', default: 'GENERAL' })
   session_category: string;

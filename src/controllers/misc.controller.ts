@@ -12,10 +12,23 @@ export class MiscController {
     res.json(await repo.find());
   }
 
+  static async getLocationById(req: Request, res: Response) {
+    const repo = AppDataSource.getRepository(Location);
+    const loc = await repo.findOneBy({ id: req.params.id as string });
+    if (!loc) return res.status(404).json({ error: 'Location not found' });
+    res.json(loc);
+  }
+
   static async createLocation(req: Request, res: Response) {
     const repo = AppDataSource.getRepository(Location);
     const location = repo.create(req.body);
     res.status(201).json(await repo.save(location));
+  }
+
+  static async updateLocation(req: Request, res: Response) {
+    const repo = AppDataSource.getRepository(Location);
+    await repo.update(req.params.id as string, req.body);
+    res.json(await repo.findOneBy({ id: req.params.id as string }));
   }
 
   static async deleteLocation(req: Request, res: Response) {
@@ -54,6 +67,13 @@ export class MiscController {
     res.json(await repo.find());
   }
 
+  static async getStaffById(req: Request, res: Response) {
+    const repo = AppDataSource.getRepository(Staff);
+    const staff = await repo.findOneBy({ id: req.params.id as string });
+    if (!staff) return res.status(404).json({ error: 'Staff not found' });
+    res.json(staff);
+  }
+
   static async createStaff(req: Request, res: Response) {
     const repo = AppDataSource.getRepository(Staff);
     const staff = repo.create(req.body);
@@ -72,10 +92,34 @@ export class MiscController {
     res.status(204).send();
   }
 
+  /**
+   * POST /staff/:id/leave
+   * body: { start: string, end: string }
+   * Appends a leave period to the staff member's leave_periods JSON array
+   */
+  static async addLeave(req: Request, res: Response) {
+    const repo = AppDataSource.getRepository(Staff);
+    const staff = await repo.findOneBy({ id: req.params.id as string });
+    if (!staff) return res.status(404).json({ error: 'Staff not found' });
+
+    const { start, end } = req.body;
+    if (!start || !end) return res.status(400).json({ error: 'start and end dates are required' });
+
+    staff.leave_periods = [...(staff.leave_periods || []), { start, end }];
+    const saved = await repo.save(staff);
+    res.json(saved);
+  }
+
   // --- NOTIFICATIONS ---
   static async getNotifications(req: Request, res: Response) {
     const repo = AppDataSource.getRepository(Notification);
-    res.json(await repo.find({ order: { created_at: 'DESC' } }));
+    res.json(await repo.find({ order: { createdAt: 'DESC' } }));
+  }
+
+  static async addNotification(req: Request, res: Response) {
+    const repo = AppDataSource.getRepository(Notification);
+    const notification = repo.create(req.body);
+    res.status(201).json(await repo.save(notification));
   }
 
   static async markNotificationRead(req: Request, res: Response) {
@@ -90,4 +134,3 @@ export class MiscController {
     res.status(204).send();
   }
 }
-

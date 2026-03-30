@@ -21,6 +21,6 @@ export class Assignment {
   @Column({ type: 'varchar' })
   status: AssignmentStatus;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'datetime' })
   assignedAt: Date;
 }

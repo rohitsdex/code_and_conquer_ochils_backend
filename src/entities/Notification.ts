@@ -1,14 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
-export type NotificationType = 'INVITE' | 'ASSIGNMENT_UPDATE' | 'ROLE_CHANGE' | 'SYSTEM' | 'ERROR';
+export type NotificationType = 'INVITE' | 'ASSIGNMENT' | 'INVITE_RESPONSE' | 'EVENT_UPDATE' | 'EMAIL_SENT' | 'ROLE_CHANGE' | 'SYSTEM' | 'ERROR' | 'ASSIGNMENT_UPDATE';
 
 @Entity('notifications')
 export class Notification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'uuid' })
-  userId: string;
+  @Column({ type: 'varchar' })
+  type: NotificationType;
 
   @Column({ type: 'varchar' })
   title: string;
@@ -16,15 +16,15 @@ export class Notification {
   @Column({ type: 'text' })
   message: string;
 
-  @Column({ type: 'varchar' })
-  type: NotificationType;
-
   @Column({ type: 'boolean', default: false })
   read: boolean;
 
   @Column({ type: 'varchar', nullable: true })
-  link: string;
+  linkTo: string;
+
+  @Column({ type: 'boolean', default: false, nullable: true })
+  emailSent: boolean;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 }

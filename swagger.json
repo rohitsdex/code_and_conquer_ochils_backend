@@ -1,0 +1,107 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sahayak Staff Flow API",
+    "version": "1.0.0",
+    "description": "API for Sahayak Scheduling & Payroll management."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000/api",
+      "description": "Development Server"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Staff": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "staff_type": { "type": "string", "enum": ["FULLTIME", "HOURLY", "SESSIONAL", "VOLUNTEER"] },
+          "department": { "type": "string" },
+          "qualifications": { "type": "array", "items": { "type": "string" } },
+          "hourly_rate": { "type": "number" }
+        }
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "date": { "type": "string", "format": "date" },
+          "startTime": { "type": "string" },
+          "endTime": { "type": "string" },
+          "requiredStaffCount": { "type": "integer" },
+          "eventType": { "$ref": "#/components/schemas/EventType" }
+        }
+      },
+      "EventType": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "color": { "type": "string" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/staff": {
+      "get": {
+        "summary": "Retrieve all staff",
+        "responses": {
+          "200": {
+            "description": "A list of staff members",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Staff" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "summary": "Retrieve events within a block",
+        "parameters": [
+          { "name": "blockId", "in": "query", "schema": { "type": "string" }, "required": false }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of events",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Event" } }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new event session",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Event" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Event created" }
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "summary": "Get event detail by ID",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": { "description": "Hydrated event object" }
+        }
+      }
+    }
+  }
+}

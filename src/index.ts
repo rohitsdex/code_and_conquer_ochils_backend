@@ -7,6 +7,8 @@ import blockRoutes from './routes/block.routes';
 import eventRoutes from './routes/event.routes';
 import assignmentRoutes from './routes/assignment.routes';
 import miscRoutes from './routes/misc.routes';
+import swaggerUi from 'swagger-ui-express';
+import * as swaggerDocument from '../swagger.json';
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ app.use(express.json());
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'StaffFlow Scheduling Engine API is running' });
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/blocks', blockRoutes);
 app.use('/api/events', eventRoutes);
