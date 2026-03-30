@@ -5,6 +5,7 @@ const router = Router();
 
 router.get('/', EventController.getEventsByBlock); // Pass ?blockId=
 router.post('/', EventController.createEvent);
+router.get('/:id', EventController.getRota);
 router.put('/:id', EventController.updateEvent);
 router.delete('/:id', EventController.deleteEvent);
 

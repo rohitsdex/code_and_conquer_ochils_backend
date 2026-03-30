@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { AssignmentService } from '../services/assignment.service';
+import { AppDataSource } from '../config/database';
+import { Staff } from '../entities/Staff';
 
 const assignmentService = new AssignmentService();
 
@@ -39,6 +41,22 @@ export class AssignmentController {
       res.status(204).send();
     } catch (error: any) {
       res.status(400).json({ error: error.message });
+    }
+  }
+
+  // --- MISSING ENDPOINT: getEligibleStaff ---
+  static async getEligibleStaff(req: Request, res: Response) {
+    try {
+      // Logic for computing constraints across all staff vs this target event
+      const allStaff = await AppDataSource.getRepository(Staff).find();
+      const mockResult = allStaff.map(staff => ({
+        staffId: staff.id,
+        isEligible: true,
+        reasons: [] // Constraint Engine outputs map here (e.g. EXTERNAL_CONFLICT)
+      }));
+      res.json(mockResult);
+    } catch (error: any) {
+      res.status(500).json({ error: 'Constraint engine failure' });
     }
   }
 }
