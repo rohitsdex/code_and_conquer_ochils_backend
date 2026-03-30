@@ -3,7 +3,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { AppDataSource } from './config/database';
-// import routes
+import blockRoutes from './routes/block.routes';
+import eventRoutes from './routes/event.routes';
+import assignmentRoutes from './routes/assignment.routes';
 
 dotenv.config();
 
@@ -17,6 +19,10 @@ app.use(express.json());
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'StaffFlow Scheduling Engine API is running' });
 });
+
+app.use('/api/blocks', blockRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/assignments', assignmentRoutes);
 
 // AppDataSource.initialize()
 //   .then(() => {
