@@ -6,6 +6,7 @@ import { AppDataSource } from './config/database';
 import blockRoutes from './routes/block.routes';
 import eventRoutes from './routes/event.routes';
 import assignmentRoutes from './routes/assignment.routes';
+import miscRoutes from './routes/misc.routes';
 
 dotenv.config();
 
@@ -23,6 +24,8 @@ app.get('/api/health', (req, res) => {
 app.use('/api/blocks', blockRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/assignments', assignmentRoutes);
+
+app.use('/api', miscRoutes); // Automatically makes /api/locations, /api/staff, etc
 
 // AppDataSource.initialize()
 //   .then(() => {
