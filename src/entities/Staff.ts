@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Assignment } from './Assignment';
 
-export type StaffType = 'FULLTIME' | 'SESSIONAL' | 'HOURLY';
+export type StaffType = 'FULLTIME' | 'HOURLY';
 export type StaffDesignation = 'YOUTH_WORKER' | 'SESSION_SUPPORT' | 'MANAGEMENT' | 'VOLUNTEER';
 
 @Entity('staff')

@@ -25,9 +25,9 @@ export class BlockService {
   async updateBlock(id: string, data: Partial<Block>): Promise<Block> {
     const block = await this.blockRepository.findOneBy({ id });
     if (!block) throw new Error('Block not found');
-    if (block.status === 'PUBLISHED') throw new Error('Cannot edit a PUBLISHED block');
-
-    Object.assign(block, data);
+    // Allow editing published blocks — status field itself is preserved unless explicitly passed
+    const { status: _ignoredStatus, ...safeData } = data as any;
+    Object.assign(block, safeData);
     return this.blockRepository.save(block);
   }
 
@@ -66,7 +66,7 @@ export class BlockService {
     const block = await this.blockRepository.findOneBy({ id });
     if (!block) throw new Error('Block not found');
     if (block.status === 'PUBLISHED') throw new Error('Cannot delete a PUBLISHED block');
-    
+
     await this.blockRepository.remove(block);
   }
 }

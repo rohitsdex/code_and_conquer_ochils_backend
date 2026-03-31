@@ -86,14 +86,14 @@ const mockStaff = [
   },
   {
     name: 'Vikram Joshi', email: 'vikram@oyci.org.uk', employee_id: 'EMP-004',
-    staff_type: 'SESSIONAL' as const, designation: 'YOUTH_WORKER' as const,
+    staff_type: 'HOURLY' as const, designation: 'YOUTH_WORKER' as const,
     department: 'Youth Work', qualifications: ['first-aid', 'asc', 'counseling'],
     availability: [2, 4, 6].map(d => ({ dayOfWeek: d, startTime: '09:00', endTime: '18:00' })),
     weekly_hours_cap: 15, currentWeeklyHours: 6, hourly_rate: 24, leave_periods: [],
   },
   {
     name: 'Meera Patel', email: 'meera@oyci.org.uk', employee_id: 'EMP-005',
-    staff_type: 'SESSIONAL' as const, designation: 'YOUTH_WORKER' as const,
+    staff_type: 'HOURLY' as const, designation: 'YOUTH_WORKER' as const,
     department: 'Youth Work', qualifications: ['counseling', 'drama'],
     availability: [1, 2, 3, 4, 5].map(d => ({ dayOfWeek: d, startTime: '09:00', endTime: '13:00' })),
     weekly_hours_cap: 20, currentWeeklyHours: 8, hourly_rate: 22, leave_periods: [],
@@ -121,7 +121,7 @@ const mockStaff = [
   },
   {
     name: 'Sophia Khan', email: 'sophia@oyci.org.uk', employee_id: 'EMP-009',
-    staff_type: 'SESSIONAL' as const, designation: 'YOUTH_WORKER' as const,
+    staff_type: 'HOURLY' as const, designation: 'YOUTH_WORKER' as const,
     department: 'Youth Work', qualifications: ['asc', 'counseling'],
     availability: [1, 5].map(d => ({ dayOfWeek: d, startTime: '09:00', endTime: '17:00' })),
     weekly_hours_cap: 16, currentWeeklyHours: 6, hourly_rate: 28, leave_periods: [],
@@ -214,12 +214,13 @@ async function seed() {
   // Seed Notifications
   const notifRepo = AppDataSource.getRepository(Notification);
   const notifData = [
-    { type: 'ASSIGNMENT' as const, title: 'Staff Assigned', message: `Priya Sharma assigned to ASC Support Session on ${dates[0]}`, read: false, linkTo: `/events/${savedInstances[0].id}` },
-    { type: 'INVITE' as const, title: 'Invite Sent', message: 'Invitation sent to Vikram Joshi for Skills Training', read: false, linkTo: `/events/${savedInstances[1].id}`, emailSent: true },
-    { type: 'EMAIL_SENT' as const, title: 'Email Delivered', message: 'Invitation email delivered to vikram@oyci.org.uk', read: true },
-    { type: 'INVITE' as const, title: 'Pending Invite', message: 'Meera Patel has a pending invite for Drama Workshop', read: false, linkTo: `/events/${savedInstances[3].id}`, emailSent: true },
-    { type: 'EVENT_UPDATE' as const, title: 'Session Understaffed', message: `General Session on ${dates[4]} needs more staff`, read: false, linkTo: `/events/${savedInstances[4].id}` },
-    { type: 'SYSTEM' as const, title: 'Welcome', message: 'Welcome to the Staff Scheduling System', read: true, linkTo: '/' },
+    { type: 'ASSIGNMENT' as const, title: 'Staff Assigned', message: `Priya Sharma assigned to ASC Support Session on ${dates[0]}`, read: false, linkTo: `/events/${savedInstances[0].id}`, recipientRole: 'ADMIN' as const },
+    { type: 'INVITE' as const, title: 'Invite Sent', message: 'Invitation sent to Vikram Joshi for Skills Training', read: false, linkTo: `/events/${savedInstances[1].id}`, emailSent: true, recipientRole: 'ADMIN' as const },
+    { type: 'EMAIL_SENT' as const, title: 'Email Delivered', message: 'Invitation email delivered to vikram@oyci.org.uk', read: true, recipientRole: 'ADMIN' as const },
+    { type: 'INVITE' as const, title: 'You Have Been Invited', message: `You have been invited to Skills Training on ${dates[1]}. Please respond.`, read: false, linkTo: `/events/${savedInstances[1].id}`, recipientRole: 'STAFF' as const },
+    { type: 'INVITE_RESPONSE' as const, title: 'Pending Invite', message: 'Meera Patel has a pending invite for Drama Workshop', read: false, linkTo: `/events/${savedInstances[3].id}`, emailSent: true, recipientRole: 'ADMIN' as const },
+    { type: 'EVENT_UPDATE' as const, title: 'Session Understaffed', message: `General Session on ${dates[4]} needs more staff`, read: false, linkTo: `/events/${savedInstances[4].id}`, recipientRole: 'ALL' as const },
+    { type: 'SYSTEM' as const, title: 'Welcome to OYCI Scheduler', message: 'Ochils Youth Community Improvement — Staff scheduling & planning made simple', read: true, linkTo: '/', recipientRole: 'ALL' as const },
   ];
   await notifRepo.save(notifData.map(n => notifRepo.create(n)));
   console.log(`🔔 Seeded ${notifData.length} notifications`);

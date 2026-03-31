@@ -58,7 +58,6 @@ export class EventService {
   async createEvent(data: Partial<EventInstance>): Promise<EventInstance> {
     const block = await this.blockRepository.findOneBy({ id: data.blockId });
     if (!block) throw new Error('Parent block not found');
-    if (block.status === 'PUBLISHED') throw new Error('Cannot add events to a published block');
 
     const event = this.eventRepository.create(data);
     const saved = await this.eventRepository.save(event);
@@ -68,7 +67,6 @@ export class EventService {
   async updateEvent(id: string, data: Partial<EventInstance>): Promise<EventInstance> {
     const event = await this.eventRepository.findOne({ where: { id }, relations: ['block', 'assignments'] });
     if (!event) throw new Error('Event not found');
-    if (event.block?.status === 'PUBLISHED') throw new Error('Cannot edit events within a published block');
 
     Object.assign(event, data);
     const saved = await this.eventRepository.save(event);
@@ -78,7 +76,6 @@ export class EventService {
   async deleteEvent(id: string): Promise<void> {
     const event = await this.eventRepository.findOne({ where: { id }, relations: ['block'] });
     if (!event) throw new Error('Event not found');
-    if (event.block?.status === 'PUBLISHED') throw new Error('Cannot delete events within a published block');
 
     await this.eventRepository.remove(event);
   }

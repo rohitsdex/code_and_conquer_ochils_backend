@@ -8,8 +8,9 @@ import { EventType } from '../entities/EventType';
 import { Notification } from '../entities/Notification';
 
 export const AppDataSource = new DataSource({
-  type: 'sqlite',
-  database: 'staffflow.sqlite',
+  type: 'sqljs',
+  location: 'staffflow.sqlite',
+  autoSave: true,
   synchronize: process.env.NODE_ENV !== 'production', // Auto-create tables in DEV
   logging: false,
   entities: [Block, EventInstance, Assignment, Staff, Location, EventType, Notification],

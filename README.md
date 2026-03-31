@@ -6,7 +6,7 @@ Professional Node.js (Express + TypeScript + TypeORM) backend for the **Sahayak 
 - **Framework:** Express.js + Node.js
 - **Language:** TypeScript
 - **Database ORM:** TypeORM
-- **Database:** SQLite (Default for local development)
+- **Database:** SQL.js (SQLite WASM for local development)
 - **API Documentation:** Swagger UI (OpenAPI 3.0)
 
 ## 🧊 Domain Model (TypeORM Entities)
@@ -25,7 +25,7 @@ npm install
 ```
 
 ### 2. Database Initialization & Seeding
-This project uses SQLite. Before running the server, you **must** seed the database with mock data to match the frontend expectations.
+This project uses SQLite powered by **SQL.js**. Before running the server, you **must** seed the database with mock data to match the frontend expectations.
 ```bash
 npm run seed
 ```

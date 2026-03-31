@@ -18,8 +18,14 @@ export class Block {
   @Column({ type: 'varchar', default: 'DRAFT' })
   status: 'DRAFT' | 'PUBLISHED';
 
-  @Column({ type: 'time', default: '14:00:00' })
+  @Column({ type: 'time', nullable: true })
   friday_training_start_time: string;
+
+  @Column({ type: 'boolean', default: false })
+  skip_friday_training: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  no_assignments_required: boolean;
 
   // Relation: 1 Block -> Many Event Instances
   @OneToMany(() => EventInstance, (eventInstance) => eventInstance.block)

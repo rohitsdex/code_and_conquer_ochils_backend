@@ -25,6 +25,9 @@ export class Notification {
   @Column({ type: 'boolean', default: false, nullable: true })
   emailSent: boolean;
 
+  @Column({ type: 'varchar', default: 'ALL' })
+  recipientRole: 'ADMIN' | 'STAFF' | 'ALL';
+
   @CreateDateColumn()
   createdAt: Date;
 }

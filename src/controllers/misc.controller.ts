@@ -113,24 +113,39 @@ export class MiscController {
   // --- NOTIFICATIONS ---
   static async getNotifications(req: Request, res: Response) {
     const repo = AppDataSource.getRepository(Notification);
-    res.json(await repo.find({ order: { createdAt: 'DESC' } }));
+    const role = req.query.role as string | undefined;
+    const all = await repo.find({ order: { createdAt: 'DESC' } });
+    // Filter: return ALL-targeted + role-specific notifications
+    const filtered = role && (role === 'ADMIN' || role === 'STAFF')
+      ? all.filter(n => n.recipientRole === 'ALL' || n.recipientRole === role)
+      : all;
+    res.json(filtered);
   }
 
   static async addNotification(req: Request, res: Response) {
     const repo = AppDataSource.getRepository(Notification);
-    const notification = repo.create(req.body);
+    const notification = repo.create({ recipientRole: 'ALL', ...req.body });
     res.status(201).json(await repo.save(notification));
   }
 
   static async markNotificationRead(req: Request, res: Response) {
     const repo = AppDataSource.getRepository(Notification);
     await repo.update(req.params.id as string, { read: true });
-    res.status(204).send();
+    const updated = await repo.findOneBy({ id: req.params.id as string });
+    res.json(updated);
   }
 
   static async markAllNotificationsRead(req: Request, res: Response) {
     const repo = AppDataSource.getRepository(Notification);
-    await repo.update({ read: false }, { read: true });
+    const role = req.query.role as string | undefined;
+    if (role && (role === 'ADMIN' || role === 'STAFF')) {
+      // Mark only this role's notifications as read
+      const notifs = await repo.find({ where: [{ recipientRole: 'ALL', read: false }, { recipientRole: role, read: false }] });
+      for (const n of notifs) { n.read = true; }
+      await repo.save(notifs);
+    } else {
+      await repo.update({ read: false }, { read: true });
+    }
     res.status(204).send();
   }
 }
